@@ -85,7 +85,12 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		return MSpec.cleanLabel(routeLongName);
 	}
 
-	private static final String ROUTE_COLOR = "00718F";
+	private static final String AGENCY_COLOR = "00718F";
+
+	@Override
+	public String getAgencyColor() {
+		return AGENCY_COLOR;
+	}
 
 	@Override
 	public String getRouteColor(GRoute gRoute) {
@@ -103,7 +108,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		if ("200".equals(gRoute.route_short_name)) return "A74232";
 		if ("300".equals(gRoute.route_short_name)) return "FDE900";
 		if ("400".equals(gRoute.route_short_name)) return "623F99";
-		return ROUTE_COLOR;
+		return super.getRouteColor(gRoute);
 	}
 
 	@Override
