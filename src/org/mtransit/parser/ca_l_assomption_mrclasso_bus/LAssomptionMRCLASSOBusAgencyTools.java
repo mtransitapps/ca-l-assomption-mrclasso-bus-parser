@@ -89,22 +89,51 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		return AGENCY_COLOR;
 	}
 
+	private static final String COLOR_E680AD = "E680AD";
+	private static final String COLOR_A1A1A4 = "A1A1A4";
+	private static final String COLOR_99CB9A = "99CB9A";
+	private static final String COLOR_EF3B3A = "EF3B3A";
+	private static final String COLOR_E8B909 = "E8B909";
+	private static final String COLOR_067650 = "067650";
+	private static final String COLOR_1DA1DC = "1DA1DC";
+	private static final String COLOR_AAB41C = "AAB41C";
+	private static final String COLOR_D68119 = "D68119";
+	private static final String COLOR_A686AA = "A686AA";
+	private static final String COLOR_A74232 = "A74232";
+	private static final String COLOR_FDE900 = "FDE900";
+	private static final String COLOR_623F99 = "623F99";
+
+	private static final String RSN_1 = "1";
+	private static final String RSN_2 = "2";
+	private static final String RSN_5 = "5";
+	private static final String RSN_6 = "6";
+	private static final String RSN_8 = "8";
+	private static final String RSN_9 = "9";
+	private static final String RSN_11 = "11";
+	private static final String RSN_14 = "14";
+	private static final String RSN_15 = "15";
+	private static final String RSN_100 = "100";
+	private static final String RSN_101 = "101";
+	private static final String RSN_200 = "200";
+	private static final String RSN_300 = "300";
+	private static final String RSN_400 = "400";
+
 	@Override
 	public String getRouteColor(GRoute gRoute) {
-		if ("1".equals(gRoute.route_short_name)) return "AAB41C";
-		if ("2".equals(gRoute.route_short_name)) return "E680AD";
-		if ("5".equals(gRoute.route_short_name)) return "A1A1A4";
-		if ("6".equals(gRoute.route_short_name)) return "99CB9A";
-		if ("8".equals(gRoute.route_short_name)) return "EF3B3A";
-		if ("9".equals(gRoute.route_short_name)) return "E8B909";
-		if ("11".equals(gRoute.route_short_name)) return "067650";
-		if ("14".equals(gRoute.route_short_name)) return "1DA1DC";
-		if ("15".equals(gRoute.route_short_name)) return "AAB41C";
-		if ("100".equals(gRoute.route_short_name)) return "D68119";
-		if ("101".equals(gRoute.route_short_name)) return "A686AA";
-		if ("200".equals(gRoute.route_short_name)) return "A74232";
-		if ("300".equals(gRoute.route_short_name)) return "FDE900";
-		if ("400".equals(gRoute.route_short_name)) return "623F99";
+		if (RSN_1.equals(gRoute.route_short_name)) return COLOR_AAB41C;
+		if (RSN_2.equals(gRoute.route_short_name)) return COLOR_E680AD;
+		if (RSN_5.equals(gRoute.route_short_name)) return COLOR_A1A1A4;
+		if (RSN_6.equals(gRoute.route_short_name)) return COLOR_99CB9A;
+		if (RSN_8.equals(gRoute.route_short_name)) return COLOR_EF3B3A;
+		if (RSN_9.equals(gRoute.route_short_name)) return COLOR_E8B909;
+		if (RSN_11.equals(gRoute.route_short_name)) return COLOR_067650;
+		if (RSN_14.equals(gRoute.route_short_name)) return COLOR_1DA1DC;
+		if (RSN_15.equals(gRoute.route_short_name)) return COLOR_AAB41C;
+		if (RSN_100.equals(gRoute.route_short_name)) return COLOR_D68119;
+		if (RSN_101.equals(gRoute.route_short_name)) return COLOR_A686AA;
+		if (RSN_200.equals(gRoute.route_short_name)) return COLOR_A74232;
+		if (RSN_300.equals(gRoute.route_short_name)) return COLOR_FDE900;
+		if (RSN_400.equals(gRoute.route_short_name)) return COLOR_623F99;
 		return super.getRouteColor(gRoute);
 	}
 
@@ -145,9 +174,11 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		return super.cleanStopNameFR(gStopName);
 	}
 
+	private static final String ZERO = "0";
+
 	@Override
 	public String getStopCode(GStop gStop) {
-		if ("0".equals(gStop.stop_code)) {
+		if (ZERO.equals(gStop.stop_code)) {
 			return null;
 		}
 		return super.getStopCode(gStop);
