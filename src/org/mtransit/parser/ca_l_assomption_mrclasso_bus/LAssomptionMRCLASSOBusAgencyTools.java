@@ -76,7 +76,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String getRouteLongName(GRoute gRoute) {
-		String routeLongName = gRoute.route_long_name;
+		String routeLongName = gRoute.getRouteLongName();
 		routeLongName = CleanUtils.SAINT.matcher(routeLongName).replaceAll(CleanUtils.SAINT_REPLACEMENT);
 		routeLongName = SECTEUR.matcher(routeLongName).replaceAll(SECTEUR_REPLACEMENT);
 		return CleanUtils.cleanLabel(routeLongName);
@@ -120,26 +120,26 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String getRouteColor(GRoute gRoute) {
-		if (RSN_1.equals(gRoute.route_short_name)) return COLOR_AAB41C;
-		if (RSN_2.equals(gRoute.route_short_name)) return COLOR_E680AD;
-		if (RSN_5.equals(gRoute.route_short_name)) return COLOR_A1A1A4;
-		if (RSN_6.equals(gRoute.route_short_name)) return COLOR_99CB9A;
-		if (RSN_8.equals(gRoute.route_short_name)) return COLOR_EF3B3A;
-		if (RSN_9.equals(gRoute.route_short_name)) return COLOR_E8B909;
-		if (RSN_11.equals(gRoute.route_short_name)) return COLOR_067650;
-		if (RSN_14.equals(gRoute.route_short_name)) return COLOR_1DA1DC;
-		if (RSN_15.equals(gRoute.route_short_name)) return COLOR_AAB41C;
-		if (RSN_100.equals(gRoute.route_short_name)) return COLOR_D68119;
-		if (RSN_101.equals(gRoute.route_short_name)) return COLOR_A686AA;
-		if (RSN_200.equals(gRoute.route_short_name)) return COLOR_A74232;
-		if (RSN_300.equals(gRoute.route_short_name)) return COLOR_FDE900;
-		if (RSN_400.equals(gRoute.route_short_name)) return COLOR_623F99;
+		if (RSN_1.equals(gRoute.getRouteShortName())) return COLOR_AAB41C;
+		if (RSN_2.equals(gRoute.getRouteShortName())) return COLOR_E680AD;
+		if (RSN_5.equals(gRoute.getRouteShortName())) return COLOR_A1A1A4;
+		if (RSN_6.equals(gRoute.getRouteShortName())) return COLOR_99CB9A;
+		if (RSN_8.equals(gRoute.getRouteShortName())) return COLOR_EF3B3A;
+		if (RSN_9.equals(gRoute.getRouteShortName())) return COLOR_E8B909;
+		if (RSN_11.equals(gRoute.getRouteShortName())) return COLOR_067650;
+		if (RSN_14.equals(gRoute.getRouteShortName())) return COLOR_1DA1DC;
+		if (RSN_15.equals(gRoute.getRouteShortName())) return COLOR_AAB41C;
+		if (RSN_100.equals(gRoute.getRouteShortName())) return COLOR_D68119;
+		if (RSN_101.equals(gRoute.getRouteShortName())) return COLOR_A686AA;
+		if (RSN_200.equals(gRoute.getRouteShortName())) return COLOR_A74232;
+		if (RSN_300.equals(gRoute.getRouteShortName())) return COLOR_FDE900;
+		if (RSN_400.equals(gRoute.getRouteShortName())) return COLOR_623F99;
 		return super.getRouteColor(gRoute);
 	}
 
 	@Override
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
-		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.trip_headsign), gTrip.direction_id);
+		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
 	}
 
 	private static final Pattern DIRECTION = Pattern.compile("(direction )", Pattern.CASE_INSENSITIVE);
@@ -178,7 +178,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String getStopCode(GStop gStop) {
-		if (ZERO.equals(gStop.stop_code)) {
+		if (ZERO.equals(gStop.getStopCode())) {
 			return null;
 		}
 		return super.getStopCode(gStop);
@@ -193,7 +193,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 			return Integer.valueOf(stopCode); // using stop code as stop ID
 		}
 		// generating integer stop ID
-		Matcher matcher = DIGITS.matcher(gStop.stop_id);
+		Matcher matcher = DIGITS.matcher(gStop.getStopId());
 		matcher.find();
 		int digits = Integer.parseInt(matcher.group());
 		int stopId;
