@@ -192,7 +192,6 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		if (stopCode != null && stopCode.length() > 0) {
 			return Integer.valueOf(stopCode); // using stop code as stop ID
 		}
-		// generating integer stop ID
 		Matcher matcher = DIGITS.matcher(gStop.getStopId());
 		matcher.find();
 		int digits = Integer.parseInt(matcher.group());
@@ -204,5 +203,4 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		System.exit(-1);
 		return stopId + digits;
 	}
-
 }
