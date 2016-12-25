@@ -142,6 +142,29 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
 	}
 
+	@Override
+	public boolean mergeHeadsign(MTrip mTrip, MTrip mTripToMerge) {
+		if (mTrip.getRouteId() == 2L) {
+			if (mTrip.getHeadsignId() == 0) {
+				mTrip.setHeadsignString("Lavaltrie", mTrip.getHeadsignId());
+				return true;
+			}
+		} else if (mTrip.getRouteId() == 6L) {
+			if (mTrip.getHeadsignId() == 1) {
+				mTrip.setHeadsignString("Épiphanie", mTrip.getHeadsignId());
+				return true;
+			}
+		} else if (mTrip.getRouteId() == 400L) {
+			if (mTrip.getHeadsignId() == 0) {
+				mTrip.setHeadsignString("Assomption", mTrip.getHeadsignId());
+				return true;
+			}
+		}
+		System.out.printf("\nUnexpected trips to merge %s & %s!\n", mTrip, mTripToMerge);
+		System.exit(-1);
+		return false;
+	}
+
 	private static final Pattern DIRECTION = Pattern.compile("(direction )", Pattern.CASE_INSENSITIVE);
 	private static final String DIRECTION_REPLACEMENT = "";
 
@@ -193,14 +216,18 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 			return Integer.valueOf(stopCode); // using stop code as stop ID
 		}
 		Matcher matcher = DIGITS.matcher(gStop.getStopId());
-		matcher.find();
-		int digits = Integer.parseInt(matcher.group());
-		int stopId;
-		System.out.println("Stop doesn't have an ID (start with)! " + gStop);
+		if (matcher.find()) {
+			int digits = Integer.parseInt(matcher.group());
+			int stopId;
+			System.out.printf("\nStop doesn't have an ID (start with) %s!\n", gStop);
+			System.exit(-1);
+			stopId = -1;
+			System.out.printf("\nStop doesn't have an ID (end with) %s!\n", gStop);
+			System.exit(-1);
+			return stopId + digits;
+		}
+		System.out.printf("\nUnexpected stop ID for %s!\n", gStop);
 		System.exit(-1);
-		stopId = -1;
-		System.out.println("Stop doesn't have an ID (end with)! " + gStop);
-		System.exit(-1);
-		return stopId + digits;
+		return -1;
 	}
 }
