@@ -1,6 +1,8 @@
 package org.mtransit.parser.ca_l_assomption_mrclasso_bus;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -144,18 +146,34 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public boolean mergeHeadsign(MTrip mTrip, MTrip mTripToMerge) {
+		List<String> headsignsValues = Arrays.asList(mTrip.getHeadsignValue(), mTripToMerge.getHeadsignValue());
 		if (mTrip.getRouteId() == 2L) {
-			if (mTrip.getHeadsignId() == 0) {
+			if (Arrays.asList( //
+					"St-Sulpice", //
+					"Lavaltrie" //
+			).containsAll(headsignsValues)) {
 				mTrip.setHeadsignString("Lavaltrie", mTrip.getHeadsignId());
 				return true;
 			}
 		} else if (mTrip.getRouteId() == 6L) {
-			if (mTrip.getHeadsignId() == 1) {
+			if (Arrays.asList( //
+					"Repentigny", //
+					"Épiphanie" //
+			).containsAll(headsignsValues)) {
 				mTrip.setHeadsignString("Épiphanie", mTrip.getHeadsignId());
 				return true;
 			}
 		} else if (mTrip.getRouteId() == 400L) {
-			if (mTrip.getHeadsignId() == 0) {
+			if (Arrays.asList( //
+					"Repentigny", //
+					"Montréal" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Montréal", mTrip.getHeadsignId());
+				return true;
+			} else if (Arrays.asList( //
+					"Repentigny", //
+					"Assomption" //
+			).containsAll(headsignsValues)) {
 				mTrip.setHeadsignString("Assomption", mTrip.getHeadsignId());
 				return true;
 			}
