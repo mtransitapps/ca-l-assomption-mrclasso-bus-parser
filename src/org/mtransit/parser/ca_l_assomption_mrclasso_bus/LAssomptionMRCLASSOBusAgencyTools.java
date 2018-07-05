@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mtransit.parser.DefaultAgencyTools;
 import org.mtransit.parser.Pair;
 import org.mtransit.parser.SplitUtils;
@@ -112,7 +113,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		return CleanUtils.cleanLabel(routeLongName);
 	}
 
-	private static final String AGENCY_COLOR = "00718F";
+	private static final String AGENCY_COLOR = "1F1F1F"; // DARK GRAY (from GTFS)
 
 	@Override
 	public String getAgencyColor() {
@@ -150,20 +151,25 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String getRouteColor(GRoute gRoute) {
-		if (RSN_1.equals(gRoute.getRouteShortName())) return COLOR_AAB41C;
-		if (RSN_2.equals(gRoute.getRouteShortName())) return COLOR_E680AD;
-		if (RSN_5.equals(gRoute.getRouteShortName())) return COLOR_A1A1A4;
-		if (RSN_6.equals(gRoute.getRouteShortName())) return COLOR_99CB9A;
-		if (RSN_8.equals(gRoute.getRouteShortName())) return COLOR_EF3B3A;
-		if (RSN_9.equals(gRoute.getRouteShortName())) return COLOR_E8B909;
-		if (RSN_11.equals(gRoute.getRouteShortName())) return COLOR_067650;
-		if (RSN_14.equals(gRoute.getRouteShortName())) return COLOR_1DA1DC;
-		if (RSN_15.equals(gRoute.getRouteShortName())) return COLOR_AAB41C;
-		if (RSN_100.equals(gRoute.getRouteShortName())) return COLOR_D68119;
-		if (RSN_101.equals(gRoute.getRouteShortName())) return COLOR_A686AA;
-		if (RSN_200.equals(gRoute.getRouteShortName())) return COLOR_A74232;
-		if (RSN_300.equals(gRoute.getRouteShortName())) return COLOR_FDE900;
-		if (RSN_400.equals(gRoute.getRouteShortName())) return COLOR_623F99;
+		if (StringUtils.isEmpty(gRoute.getRouteColor())) {
+			if (RSN_1.equals(gRoute.getRouteShortName())) return COLOR_AAB41C;
+			if (RSN_2.equals(gRoute.getRouteShortName())) return COLOR_E680AD;
+			if (RSN_5.equals(gRoute.getRouteShortName())) return COLOR_A1A1A4;
+			if (RSN_6.equals(gRoute.getRouteShortName())) return COLOR_99CB9A;
+			if (RSN_8.equals(gRoute.getRouteShortName())) return COLOR_EF3B3A;
+			if (RSN_9.equals(gRoute.getRouteShortName())) return COLOR_E8B909;
+			if (RSN_11.equals(gRoute.getRouteShortName())) return COLOR_067650;
+			if (RSN_14.equals(gRoute.getRouteShortName())) return COLOR_1DA1DC;
+			if (RSN_15.equals(gRoute.getRouteShortName())) return COLOR_AAB41C;
+			if (RSN_100.equals(gRoute.getRouteShortName())) return COLOR_D68119;
+			if (RSN_101.equals(gRoute.getRouteShortName())) return COLOR_A686AA;
+			if (RSN_200.equals(gRoute.getRouteShortName())) return COLOR_A74232;
+			if (RSN_300.equals(gRoute.getRouteShortName())) return COLOR_FDE900;
+			if (RSN_400.equals(gRoute.getRouteShortName())) return COLOR_623F99;
+			System.out.println("Unexpected route color " + gRoute);
+			System.exit(-1);
+			return null;
+		}
 		return super.getRouteColor(gRoute);
 	}
 
