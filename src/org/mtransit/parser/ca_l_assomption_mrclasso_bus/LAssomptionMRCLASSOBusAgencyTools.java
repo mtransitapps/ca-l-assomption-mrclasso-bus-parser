@@ -274,6 +274,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 	@Override
 	public String cleanTripHeadsign(String tripHeadsign) {
 		tripHeadsign = DIRECTION.matcher(tripHeadsign).replaceAll(DIRECTION_REPLACEMENT);
+		tripHeadsign = CleanUtils.cleanStreetTypesFRCA(tripHeadsign);
 		return CleanUtils.cleanLabelFR(tripHeadsign);
 	}
 
