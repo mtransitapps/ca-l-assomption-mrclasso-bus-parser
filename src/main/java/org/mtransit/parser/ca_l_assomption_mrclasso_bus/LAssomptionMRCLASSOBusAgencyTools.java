@@ -47,7 +47,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 	public void start(String[] args) {
 		System.out.printf("\nGenerating MRCLASSO bus data...");
 		long start = System.currentTimeMillis();
-		this.serviceIds = extractUsefulServiceIds(args, this);
+		this.serviceIds = extractUsefulServiceIds(args, this, true);
 		super.start(args);
 		System.out.printf("\nGenerating MRCLASSO bus data... DONE in %s.\n", Utils.getPrettyDuration(System.currentTimeMillis() - start));
 	}
@@ -181,7 +181,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 	private static HashMap<Long, RouteTripSpec> ALL_ROUTE_TRIPS2;
 	static {
 		HashMap<Long, RouteTripSpec> map2 = new HashMap<Long, RouteTripSpec>();
-		map2.put(1L + RID_STARTS_WITH_T, new RouteTripSpec(1L + RID_STARTS_WITH_T, // T1
+		map2.put(RID_STARTS_WITH_T + 1L, new RouteTripSpec(RID_STARTS_WITH_T + 1L, // T1
 				0, MTrip.HEADSIGN_TYPE_STRING, "Repentigny", //
 				1, MTrip.HEADSIGN_TYPE_STRING, "Charlemagne") //
 				.addTripSort(0, //
@@ -262,6 +262,14 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString("Assomption", mTrip.getHeadsignId());
 				return true;
 			}
+		} else if (mTrip.getRouteId() == RID_STARTS_WITH_T + 3L) { // T3
+			if (Arrays.asList( //
+					"Ligne 9", //
+					"T3" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("T3", mTrip.getHeadsignId());
+				return true;
+			}
 		}
 		System.out.printf("\nUnexpected trips to merge %s & %s!\n", mTrip, mTripToMerge);
 		System.exit(-1);
@@ -271,9 +279,14 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 	private static final Pattern DIRECTION = Pattern.compile("(direction )", Pattern.CASE_INSENSITIVE);
 	private static final String DIRECTION_REPLACEMENT = "";
 
+	private static final Pattern TAXIBUS_T_ = Pattern.compile("((^|\\W)(taxibus t([\\d]+))(\\W|$))", Pattern.CASE_INSENSITIVE);
+	private static final String TAXIBUS_T_REPLACEMENT = "$2" + "T$4" + "$5";
+
 	@Override
 	public String cleanTripHeadsign(String tripHeadsign) {
+		tripHeadsign = CleanUtils.keepToFR(tripHeadsign);
 		tripHeadsign = DIRECTION.matcher(tripHeadsign).replaceAll(DIRECTION_REPLACEMENT);
+		tripHeadsign = TAXIBUS_T_.matcher(tripHeadsign).replaceAll(TAXIBUS_T_REPLACEMENT);
 		tripHeadsign = CleanUtils.cleanStreetTypesFRCA(tripHeadsign);
 		return CleanUtils.cleanLabelFR(tripHeadsign);
 	}
