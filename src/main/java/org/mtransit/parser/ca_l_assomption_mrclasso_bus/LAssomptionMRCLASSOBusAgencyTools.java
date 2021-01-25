@@ -5,9 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mtransit.parser.CleanUtils;
 import org.mtransit.parser.DefaultAgencyTools;
 import org.mtransit.parser.MTLog;
-import org.mtransit.parser.Pair;
-import org.mtransit.parser.SplitUtils;
-import org.mtransit.parser.SplitUtils.RouteTripSpec;
 import org.mtransit.parser.StringUtils;
 import org.mtransit.parser.Utils;
 import org.mtransit.parser.gtfs.data.GCalendar;
@@ -16,18 +13,11 @@ import org.mtransit.parser.gtfs.data.GRoute;
 import org.mtransit.parser.gtfs.data.GSpec;
 import org.mtransit.parser.gtfs.data.GStop;
 import org.mtransit.parser.gtfs.data.GTrip;
-import org.mtransit.parser.gtfs.data.GTripStop;
 import org.mtransit.parser.mt.data.MAgency;
 import org.mtransit.parser.mt.data.MRoute;
 import org.mtransit.parser.mt.data.MTrip;
-import org.mtransit.parser.mt.data.MTripStop;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -133,108 +123,38 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		return AGENCY_COLOR;
 	}
 
-	private static final String COLOR_E680AD = "E680AD";
-	private static final String COLOR_A1A1A4 = "A1A1A4";
-	private static final String COLOR_99CB9A = "99CB9A";
-	private static final String COLOR_EF3B3A = "EF3B3A";
-	private static final String COLOR_E8B909 = "E8B909";
-	private static final String COLOR_067650 = "067650";
-	private static final String COLOR_1DA1DC = "1DA1DC";
-	private static final String COLOR_AAB41C = "AAB41C";
-	private static final String COLOR_D68119 = "D68119";
-	private static final String COLOR_A686AA = "A686AA";
-	private static final String COLOR_A74232 = "A74232";
-	private static final String COLOR_FDE900 = "FDE900";
-	private static final String COLOR_623F99 = "623F99";
-
-	private static final String RSN_1 = "1";
-	private static final String RSN_2 = "2";
-	private static final String RSN_5 = "5";
-	private static final String RSN_6 = "6";
-	private static final String RSN_8 = "8";
-	private static final String RSN_9 = "9";
-	private static final String RSN_11 = "11";
-	private static final String RSN_14 = "14";
-	private static final String RSN_15 = "15";
-	private static final String RSN_100 = "100";
-	private static final String RSN_101 = "101";
-	private static final String RSN_200 = "200";
-	private static final String RSN_300 = "300";
-	private static final String RSN_400 = "400";
-
 	@Nullable
 	@Override
 	public String getRouteColor(@NotNull GRoute gRoute) {
 		if (StringUtils.isEmpty(gRoute.getRouteColor())) {
-			if (RSN_1.equals(gRoute.getRouteShortName())) return COLOR_AAB41C;
-			if (RSN_2.equals(gRoute.getRouteShortName())) return COLOR_E680AD;
-			if (RSN_5.equals(gRoute.getRouteShortName())) return COLOR_A1A1A4;
-			if (RSN_6.equals(gRoute.getRouteShortName())) return COLOR_99CB9A;
-			if (RSN_8.equals(gRoute.getRouteShortName())) return COLOR_EF3B3A;
-			if (RSN_9.equals(gRoute.getRouteShortName())) return COLOR_E8B909;
-			if (RSN_11.equals(gRoute.getRouteShortName())) return COLOR_067650;
-			if (RSN_14.equals(gRoute.getRouteShortName())) return COLOR_1DA1DC;
-			if (RSN_15.equals(gRoute.getRouteShortName())) return COLOR_AAB41C;
-			if (RSN_100.equals(gRoute.getRouteShortName())) return COLOR_D68119;
-			if (RSN_101.equals(gRoute.getRouteShortName())) return COLOR_A686AA;
-			if (RSN_200.equals(gRoute.getRouteShortName())) return COLOR_A74232;
-			if (RSN_300.equals(gRoute.getRouteShortName())) return COLOR_FDE900;
-			if (RSN_400.equals(gRoute.getRouteShortName())) return COLOR_623F99;
-			throw new MTLog.Fatal("Unexpected route color " + gRoute);
+			final String rsn = gRoute.getRouteShortName();
+			if (Utils.isDigitsOnly(rsn)) {
+				switch (Integer.parseInt(rsn)) {
+				// @formatter:off
+				case 1: return "AAB41C";
+				case 2: return "E680AD";
+				case 5: return "A1A1A4";
+				case 6: return "99CB9A";
+				case 8: return "EF3B3A";
+				case 9: return "E8B909";
+				case 11: return "067650";
+				case 14: return "1DA1DC";
+				case 15: return "AAB41C";
+				case 100: return "D68119";
+				case 101: return "A686AA";
+				case 200: return "A74232";
+				case 300: return "FDE900";
+				case 400: return "623F99";
+				// @formatter:on
+				}
+				throw new MTLog.Fatal("Unexpected route color for %s!", gRoute);
+			}
 		}
 		return super.getRouteColor(gRoute);
 	}
 
-	private static final HashMap<Long, RouteTripSpec> ALL_ROUTE_TRIPS2;
-
-	static {
-		HashMap<Long, RouteTripSpec> map2 = new HashMap<>();
-		//noinspection deprecation
-		map2.put(RID_STARTS_WITH_T + 1L, new RouteTripSpec(RID_STARTS_WITH_T + 1L, // T1
-				0, MTrip.HEADSIGN_TYPE_STRING, "Repentigny", //
-				1, MTrip.HEADSIGN_TYPE_STRING, "Charlemagne") //
-				.addTripSort(0, //
-						Arrays.asList(//
-								"87761", // rue Carufel / rue du Sacré-Coeur
-								"87555" // boul. Claude-David / rue Notre-Dame
-						)) //
-				.addTripSort(1, //
-						Collections.emptyList()) //
-				.compileBothTripSort());
-		ALL_ROUTE_TRIPS2 = map2;
-	}
-
-	@Override
-	public int compareEarly(long routeId, @NotNull List<MTripStop> list1, @NotNull List<MTripStop> list2, @NotNull MTripStop ts1, @NotNull MTripStop ts2, @NotNull GStop ts1GStop, @NotNull GStop ts2GStop) {
-		if (ALL_ROUTE_TRIPS2.containsKey(routeId)) {
-			return ALL_ROUTE_TRIPS2.get(routeId).compare(routeId, list1, list2, ts1, ts2, ts1GStop, ts2GStop, this);
-		}
-		return super.compareEarly(routeId, list1, list2, ts1, ts2, ts1GStop, ts2GStop);
-	}
-
-	@NotNull
-	@Override
-	public ArrayList<MTrip> splitTrip(@NotNull MRoute mRoute, @Nullable GTrip gTrip, @NotNull GSpec gtfs) {
-		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
-			return ALL_ROUTE_TRIPS2.get(mRoute.getId()).getAllTrips();
-		}
-		return super.splitTrip(mRoute, gTrip, gtfs);
-	}
-
-	@NotNull
-	@Override
-	public Pair<Long[], Integer[]> splitTripStop(@NotNull MRoute mRoute, @NotNull GTrip gTrip, @NotNull GTripStop gTripStop, @NotNull ArrayList<MTrip> splitTrips, @NotNull GSpec routeGTFS) {
-		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
-			return SplitUtils.splitTripStop(mRoute, gTrip, gTripStop, routeGTFS, ALL_ROUTE_TRIPS2.get(mRoute.getId()), this);
-		}
-		return super.splitTripStop(mRoute, gTrip, gTripStop, splitTrips, routeGTFS);
-	}
-
 	@Override
 	public void setTripHeadsign(@NotNull MRoute mRoute, @NotNull MTrip mTrip, @NotNull GTrip gTrip, @NotNull GSpec gtfs) {
-		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
-			return; // split
-		}
 		mTrip.setHeadsignString(
 				cleanTripHeadsign(gTrip.getTripHeadsignOrDefault()),
 				gTrip.getDirectionIdOrDefault()
@@ -242,47 +162,12 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	@Override
+	public boolean directionFinderEnabled() {
+		return true;
+	}
+
+	@Override
 	public boolean mergeHeadsign(@NotNull MTrip mTrip, @NotNull MTrip mTripToMerge) {
-		List<String> headsignsValues = Arrays.asList(mTrip.getHeadsignValue(), mTripToMerge.getHeadsignValue());
-		if (mTrip.getRouteId() == 2L) {
-			if (Arrays.asList( //
-					"St-Sulpice", //
-					"Lavaltrie" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Lavaltrie", mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == 6L) {
-			if (Arrays.asList( //
-					"Repentigny", //
-					"Épiphanie" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Épiphanie", mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == 400L) {
-			if (Arrays.asList( //
-					"Repentigny", //
-					"Montréal" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Montréal", mTrip.getHeadsignId());
-				return true;
-			} else if (Arrays.asList( //
-					"Repentigny", //
-					"Assomption" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Assomption", mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == RID_STARTS_WITH_T + 3L) { // T3
-			if (Arrays.asList( //
-					"Ligne 9", //
-					"T3" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("T3", mTrip.getHeadsignId());
-				return true;
-			}
-		}
 		throw new MTLog.Fatal("Unexpected trips to merge %s & %s!", mTrip, mTripToMerge);
 	}
 
