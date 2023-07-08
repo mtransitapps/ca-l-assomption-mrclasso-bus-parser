@@ -9,6 +9,7 @@ import org.mtransit.commons.RegexUtils;
 import org.mtransit.commons.StringUtils;
 import org.mtransit.parser.DefaultAgencyTools;
 import org.mtransit.parser.MTLog;
+import org.mtransit.parser.gtfs.data.GRoute;
 import org.mtransit.parser.gtfs.data.GStop;
 import org.mtransit.parser.mt.data.MAgency;
 
@@ -18,7 +19,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // https://exo.quebec/en/about/open-data
-// https://exo.quebec/xdata/mrclasso/google_transit.zip
 public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(@NotNull String[] args) {
@@ -58,12 +58,18 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		return true;
 	}
 
+	@NotNull
+	@Override
+	public String getRouteShortName(@NotNull GRoute gRoute) {
+		return gRoute.getRouteShortName(); // used by GTFS-RT
+	}
+
 	@Override
 	public boolean defaultRouteLongNameEnabled() {
 		return true;
 	}
 
-	private static final Pattern SECTEUR = Pattern.compile("(secteur[s]? )", Pattern.CASE_INSENSITIVE);
+	private static final Pattern SECTEUR = Pattern.compile("(secteurs? )", Pattern.CASE_INSENSITIVE);
 	private static final String SECTEUR_REPLACEMENT = "";
 
 	@NotNull
@@ -84,7 +90,7 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		return true;
 	}
 
-	private static final Pattern TAXIBUS_T_ = Pattern.compile("((^|\\W)(taxibus t([\\d]+))(\\W|$))", Pattern.CASE_INSENSITIVE);
+	private static final Pattern TAXIBUS_T_ = Pattern.compile("((^|\\W)(taxibus t(\\d+))(\\W|$))", Pattern.CASE_INSENSITIVE);
 	private static final String TAXIBUS_T_REPLACEMENT = "$2" + "T$4" + "$5";
 
 	@NotNull
@@ -134,7 +140,8 @@ public class LAssomptionMRCLASSOBusAgencyTools extends DefaultAgencyTools {
 		if (ZERO.equals(gStop.getStopCode())) {
 			return StringUtils.EMPTY;
 		}
-		return super.getStopCode(gStop);
+		//noinspection deprecation
+		return gStop.getStopId(); // used by GTFS-RT
 	}
 
 	@Override
